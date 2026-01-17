@@ -5,6 +5,9 @@ description = "Notebook dependencies for 01-docker-terraform"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "click>=8.3.1",
     "pandas>=2.3.3",
     "pyarrow>=22.0.0",
+    "sqlalchemy>=2.0.45",
+    "tqdm>=4.67.1",
 ]
