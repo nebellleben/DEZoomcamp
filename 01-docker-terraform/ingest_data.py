@@ -33,8 +33,9 @@ import pyarrow.parquet as pq
 #@click.option('--year', default=2021, type=int, help='Year of the data')
 #@click.option('--month', default=1, type=int, help='Month of the data')
 @click.option('--target-table', default='green_taxi_trips', help='Target table name')
+@click.option('--target-csv-table', default='taxi_zone_lookup', help='Target table name')
 #@click.option('--chunksize', default=100000, type=int, help='Chunk size for reading CSV')
-def run(pg_user, pg_pass, pg_host, pg_port, pg_db, target_table):
+def run(pg_user, pg_pass, pg_host, pg_port, pg_db, target_table, target_csv_table):
     engine = create_engine(f'postgresql://{pg_user}:{pg_pass}@{pg_host}:{pg_port}/{pg_db}')
 
     first = True
@@ -64,8 +65,23 @@ def run(pg_user, pg_pass, pg_host, pg_port, pg_db, target_table):
     if preview_df is not None:
         print(preview_df)
 
+    # Added the following to ingest csv data, not present in the original notebook
+    #engine = create_engine(f'postgresql://{pg_user}:{pg_pass}@{pg_host}:{pg_port}/{pg_db}')
+    dtypes = {
+        'LocationID': 'int32',
+        'Borough': 'category',
+        'Zone': 'category',
+        'service_zone': 'category'
+    }
+    csv_path = 'taxi_zone_lookup.csv'
+    preview_df = None
 
+    df = pd.read_csv(csv_path, dtype=dtypes)
+    df.to_sql(target_csv_table, engine, if_exists='replace')
+    preview_df = df.head()
+
+    if preview_df is not None:
+        print(preview_df)
 
 if __name__ == '__main__':
     run()
-
