@@ -2,8 +2,9 @@
 
 ### Q3
 - I first inspected all dates to confirm the range of dates
-`SELECT DISTINCT CAST (lpep_pickup_datetime AS DATE) AS dates FROM public.green_taxi_trips ORDER BY dates
-
+```
+SELECT DISTINCT CAST (lpep_pickup_datetime AS DATE) AS dates FROM public.green_taxi_trips ORDER BY dates
+```
 - Then the following queried performed to get answers for "For the trips in November 2025 (lpep_pickup_datetime between '2025-11-01' and '2025-12-01', exclusive of the upper bound), how many trips had a trip_distance of less than or equal to 1 mile?"
 ```
 SELECT COUNT(*)
