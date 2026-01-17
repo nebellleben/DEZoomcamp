@@ -27,8 +27,31 @@ LIMIT 1;
 
 - "Which was the pickup zone with the largest total_amount (sum of all trips) on November 18th, 2025?"
 ```
+SELECT "Zone", SUM(total_amount) AS grand_total
+FROM public.green_taxi_trips gt
+	JOIN public.taxi_zone_lookup tz 
+    ON gt."PULocationID" = tz."LocationID"
+WHERE lpep_pickup_datetime >= '2025-11-18 00:00:00' AND lpep_pickup_datetime <  '2025-11-19 00:00:00'
+GROUP BY "Zone"
+ORDER BY grand_total DESC
+LIMIT 1
 ```
+- Answer: East Harlem North
 
 ### Q6
 
 - "For the passengers picked up in the zone named "East Harlem North" in November 2025, which was the drop off zone that had the largest tip?"
+```
+SELECT tz_d."Zone" AS "Dropoff Zone", gt.tip_amount
+FROM public.green_taxi_trips gt
+	JOIN public.taxi_zone_lookup tz_p
+	ON gt."PULocationID" = tz_p."LocationID"
+	JOIN public.taxi_zone_lookup tz_d
+    ON gt."DOLocationID" = tz_d."LocationID"
+WHERE lpep_pickup_datetime >= '2025-11-01 00:00:00' 
+	AND lpep_pickup_datetime < '2025-11-30 00:00:00'
+	AND tz_p."Zone" = 'East Harlem North'
+ORDER BY gt.tip_amount DESC
+LIMIT 1;
+```
+- Answer: LaGuardia Airport
