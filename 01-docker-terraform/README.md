@@ -4,7 +4,6 @@ For Data Engineering Zoomcamp Homework 1.
 
 Build the database by running docker compose (refer to [`docker-compose.yaml`](docker-compose.yaml)):
 ```
-docker compose pull
 docker compose up -d
 ```
 
