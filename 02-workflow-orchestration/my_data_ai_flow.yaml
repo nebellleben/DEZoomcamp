@@ -1,0 +1,41 @@
+id: my_ai_data_flow
+namespace: zoomcamp
+
+tasks:
+  - id: download_nyc_taxi_data
+    type: io.kestra.plugin.core.http.Download
+    uri: https://huggingface.co/datasets/kestra/datasets/raw/main/csv/orders.csv # Replace with the actual NYC taxi data CSV URL
+
+  - id: upload_to_gcs
+    type: io.kestra.plugin.gcp.gcs.Upload
+    from: "{{ outputs.download_nyc_taxi_data.uri }}"
+    to: "gs://your-gcs-bucket/nyc_taxi_data.csv" # Replace 'your-gcs-bucket' with your GCS bucket name
+
+  - id: load_to_bigquery
+    type: io.kestra.plugin.gcp.bigquery.LoadFromGcs
+    from:
+      - "{{ outputs.upload_to_gcs.uri }}"
+    destinationTable: "your_project.your_dataset.nyc_taxi_data" # Replace 'your_project' and 'your_dataset' with your BigQuery project and dataset
+    format: CSV
+    csvOptions:
+      skipLeadingRows: 1 # Assuming the CSV has a header row
+      allowJaggedRows: true
+    schema: # Adjust this schema to match the actual NYC taxi data columns and types
+      fields:
+        - name: order_id
+          type: INT
+        - name: customer_name
+          type: STRING
+        - name: customer_email
+          type: STRING
+        - name: product_id
+          type: INT
+        - name: price
+          type: FLOAT
+        - name: quantity
+          type: INT
+        - name: total
+          type: FLOAT
+    writeDisposition: WRITE_TRUNCATE # Overwrite the table if it exists
+    projectId: "your-gcp-project-id" # Replace with your GCP project ID
+    # serviceAccount: "your-service-account@your-gcp-project-id.iam.gserviceaccount.com" # Uncomment and replace if using a specific service account
