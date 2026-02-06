@@ -57,3 +57,11 @@ WHERE tpep_dropoff_datetime >= '2024-03-01' AND tpep_dropoff_datetime < '2024-03
 SELECT COUNT(DISTINCT VendorID)
 FROM de-zoomcamp-485516.yellow_taxi.yellow_tripdata_2024_partitioned
 WHERE tpep_dropoff_datetime >= '2024-03-01' AND tpep_dropoff_datetime < '2024-03-16'; --26.84MB
+
+
+-- Answer 9
+SELECT COUNT(*)
+FROM de-zoomcamp-485516.yellow_taxi.yellow_tripdata_2024;
+
+-- 0MB
+-- BigQuery maintains table metadata, so it doesn't scan the actual data — it just reads the stored row count from metadata.
