@@ -43,9 +43,17 @@ def get_files_to_download():
 
 
 def download_file(taxi_type, year, month):
-    filename = f"{taxi_type}_tripdata_{year}-{month}.csv.gz"
-    url = f"{BASE_URL}/{taxi_type}/{filename}"
-    gz_path = os.path.join(DOWNLOAD_DIR, filename)
+    filename = f"{taxi_type}_tripdata_{year}-{month}.csv"
+    csv_path = os.path.join(DOWNLOAD_DIR, filename)
+
+    # Check if CSV already exists
+    if os.path.exists(csv_path):
+        print(f"File already exists, skipping download: {csv_path}")
+        return csv_path
+
+    gz_filename = f"{filename}.gz"
+    url = f"{BASE_URL}/{taxi_type}/{gz_filename}"
+    gz_path = os.path.join(DOWNLOAD_DIR, gz_filename)
 
     try:
         print(f"Downloading {url}...")
@@ -53,7 +61,6 @@ def download_file(taxi_type, year, month):
         print(f"Downloaded: {gz_path}")
 
         # Extract the .gz file
-        csv_path = gz_path[:-3]  # Remove .gz extension
         try:
             with gzip.open(gz_path, 'rb') as f_in:
                 with open(csv_path, 'wb') as f_out:
@@ -106,10 +113,14 @@ def verify_gcs_upload(blob_name):
 def upload_to_gcs(file_path, max_retries=3):
     filename = os.path.basename(file_path)
     blob_name = f"{GCS_PREFIX}/{filename}"
+
+    # Check if already uploaded
+    if verify_gcs_upload(blob_name):
+        print(f"File already in GCS, skipping upload: {filename}")
+        return
+
     blob = bucket.blob(blob_name)
     blob.chunk_size = CHUNK_SIZE
-
-    create_bucket(BUCKET_NAME)
 
     for attempt in range(max_retries):
         try:
