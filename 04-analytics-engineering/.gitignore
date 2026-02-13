@@ -5,4 +5,5 @@ dbt_packages/
 dbt_internal_packages/
 logs/
 data/
+venv313/
 gcs.json
