@@ -35,8 +35,3 @@ models:
       +materialized: table
     marts:
       +materialized: table
-
-# Configuring seeds
-seeds:
-  taxi_rides_ny:
-    +materialized: table

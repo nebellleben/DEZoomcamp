@@ -66,17 +66,17 @@ sources:
           - name: vendorid
             description: "Taxi technology provider (1 = Creative Mobile Technologies, 2 = VeriFone Inc.) - Note: Raw data may contain nulls, filtered in staging"
           - name: tpep_pickup_datetime
-            description: Date and time when the meter was engaged
+            description: Date and time when meter was engaged
           - name: tpep_dropoff_datetime
-            description: Date and time when the meter was disengaged
+            description: Date and time when meter was disengaged
           - name: passenger_count
             description: Number of passengers in the vehicle
           - name: trip_distance
             description: Trip distance in miles
           - name: pulocationid
-            description: TLC Taxi Zone where the meter was engaged
+            description: TLC Taxi Zone where meter was engaged
           - name: dolocationid
-            description: TLC Taxi Zone where the meter was disengaged
+            description: TLC Taxi Zone where meter was disengaged
           - name: ratecodeid
             description: Rate code (1=Standard, 2=JFK, 3=Newark, 4=Nassau/Westchester, 5=Negotiated, 6=Group)
           - name: store_and_fwd_flag
@@ -97,3 +97,26 @@ sources:
             description: Improvement surcharge
           - name: total_amount
             description: Total amount charged
+
+      - name: fhv_tripdata_2019
+        description: Raw FHV (For-Hire Vehicle) trip records for 2019 (from seed data)
+        identifier: fhv_trips_2019
+        columns:
+          - name: dispatching_base_num
+            description: Number of the base that dispatched the trip
+          - name: PUlocationID
+            description: TLC Taxi Zone where the trip began
+          - name: DOlocationID
+            description: TLC Taxi Zone where the trip ended
+          - name: Affiliated_base_number
+            description: Base number affiliated with the dispatching base
+          - name: request_datetime
+            description: Time when the passenger requested to be picked up
+          - name: on_scene_datetime
+            description: Time when the driver arrived at the pickup location
+          - name: pickup_datetime
+            description: Time when the passenger was picked up
+          - name: dropoff_datetime
+            description: Time when the passenger was dropped off
+          - name: SR_Flag
+            description: Indicates if the trip was part of a shared ride (1=shared, 0=not shared)
