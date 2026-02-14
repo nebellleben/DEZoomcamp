@@ -19,7 +19,6 @@ sources:
       - name: green_tripdata
         description: Raw green taxi trip records
         identifier: green_trips
-        loaded_at_field: lpep_pickup_datetime
         columns:
           - name: vendorid
             description: "Taxi technology provider (1 = Creative Mobile Technologies, 2 = VeriFone Inc.) - Note: Raw data may contain nulls, filtered in staging"
@@ -63,7 +62,6 @@ sources:
       - name: yellow_tripdata
         description: Raw yellow taxi trip records
         identifier: yellow_trips
-        loaded_at_field: tpep_pickup_datetime
         columns:
           - name: vendorid
             description: "Taxi technology provider (1 = Creative Mobile Technologies, 2 = VeriFone Inc.) - Note: Raw data may contain nulls, filtered in staging"
