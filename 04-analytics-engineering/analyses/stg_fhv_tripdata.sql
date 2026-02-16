@@ -15,5 +15,5 @@ SELECT
     dropoff_datetime,
     SR_Flag,
     -- Add any additional fields from the FHV data that need to be included
-FROM {{ source('raw_data', 'fhv_tripdata_2019') }}
+FROM {{ source('raw', 'fhv_tripdata_2019') }}
 WHERE dispatching_base_num IS NOT NULL;

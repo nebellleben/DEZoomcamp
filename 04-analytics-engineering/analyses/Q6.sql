@@ -3,4 +3,4 @@
 
 SELECT 
     COUNT(*) as total_records
-FROM {{ ref('stg_fhv_tripdata') }};
+FROM {{ ref('stg_fhv_tripdata') }}

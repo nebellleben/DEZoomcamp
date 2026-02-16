@@ -8,17 +8,19 @@
     )
 }}
 
--- Filter out records where dispatching_base_num IS NULL
+-- Filter out records where dispatching_base_num IS NULL or empty
 -- Rename fields to match project naming conventions
+-- Convert string timestamps to TIMESTAMP type
 SELECT 
     dispatching_base_num,
-    PUlocationID AS pickup_location_id,
-    DOlocationID AS dropoff_location_id,
+    CAST(PUlocationID AS INT64) AS pickup_location_id,
+    CAST(DOlocationID AS INT64) AS dropoff_location_id,
     Affiliated_base_number,
-    request_datetime,
-    on_scene_datetime,
-    pickup_datetime,
-    dropoff_datetime,
+    CAST(NULL AS TIMESTAMP) AS request_datetime,
+    CAST(NULL AS TIMESTAMP) AS on_scene_datetime,
+    CAST(pickup_datetime AS TIMESTAMP) AS pickup_datetime,
+    CAST(dropOff_datetime AS TIMESTAMP) AS dropoff_datetime,
     SR_Flag
-FROM {{ ref('fhv_trips_2019') }}
-WHERE dispatching_base_num IS NOT NULL
+FROM {{ source('raw', 'fhv_tripdata_2019') }}
+WHERE dispatching_base_num IS NOT NULL 
+  AND dispatching_base_num != ''
