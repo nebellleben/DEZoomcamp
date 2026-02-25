@@ -52,6 +52,8 @@ def materialize():
                 "tpep_dropoff_datetime": "dropoff_datetime",
                 "lpep_pickup_datetime": "pickup_datetime",
                 "lpep_dropoff_datetime": "dropoff_datetime",
+                "PULocationID": "pickup_location_id",
+                "DOLocationID": "dropoff_location_id",
             }
             df = df.rename(columns=column_mapping)
             dfs.append(df)
