@@ -46,6 +46,14 @@ def materialize():
             url = f"https://d37ci6vzurychx.cloudfront.net/trip-data/{taxi_type}_tripdata_{year}-{month:02d}.parquet"
             df = pd.read_parquet(url)
             df["taxi_type"] = taxi_type
+
+            column_mapping = {
+                "tpep_pickup_datetime": "pickup_datetime",
+                "tpep_dropoff_datetime": "dropoff_datetime",
+                "lpep_pickup_datetime": "pickup_datetime",
+                "lpep_dropoff_datetime": "dropoff_datetime",
+            }
+            df = df.rename(columns=column_mapping)
             dfs.append(df)
 
     final_dataframe = pd.concat(dfs, ignore_index=True) if dfs else pd.DataFrame()

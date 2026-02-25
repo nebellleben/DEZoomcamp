@@ -1,16 +1,17 @@
 /* @bruin
+
 name: staging.trips
 type: duckdb.sql
-
-depends:
-  - ingestion.trips
-  - ingestion.payment_lookup
 
 materialization:
   type: table
   strategy: time_interval
   incremental_key: pickup_datetime
   time_granularity: timestamp
+
+depends:
+  - ingestion.trips
+  - ingestion.payment_lookup
 
 columns:
   - name: pickup_datetime
@@ -21,10 +22,11 @@ columns:
 
 custom_checks:
   - name: row_count_greater_than_zero
+    value: 1
     query: |
       SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
       FROM staging.trips
-    value: 1
+
 @bruin */
 
 SELECT
@@ -45,4 +47,3 @@ QUALIFY ROW_NUMBER() OVER (
                  t.pickup_location_id, t.dropoff_location_id, t.fare_amount
     ORDER BY t.pickup_datetime
 ) = 1
-
