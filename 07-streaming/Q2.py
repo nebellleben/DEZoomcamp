@@ -55,3 +55,5 @@ producer.flush()
 
 t1 = time.time()
 print(f"took {(t1 - t0):.2f} seconds")
+
+# Finally it took 638.39 seconds

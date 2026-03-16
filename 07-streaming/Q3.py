@@ -21,6 +21,7 @@ consumer = KafkaConsumer(
 print(f"Listening to {topic_name}...")
 
 count = 0
+count5kmtrips = 0
 for message in consumer:
     ride = message.value
     pickup_dt = datetime.fromtimestamp(ride.tpep_pickup_datetime / 1000)
@@ -28,8 +29,10 @@ for message in consumer:
           f"distance={ride.trip_distance}, amount=${ride.total_amount:.2f}, "
           f"pickup={pickup_dt}")
     count += 1
-    if count >= 10:
-        print(f"\n... received {count} messages so far (stopping after 10 for demo)")
-        break
+    if ride.trip_distance >= 5:
+        count5kmtrips += 1
+
+print(f"\nTotal number of messages received: {count}")
+print(f"Number of 5km+ trips: {count5kmtrips}")
 
 consumer.close()

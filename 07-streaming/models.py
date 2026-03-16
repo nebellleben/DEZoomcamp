@@ -1,5 +1,10 @@
 import dataclasses
+import json
 from datetime import datetime
+
+
+def ride_deserializer(message):
+    return json.loads(message.decode("utf-8"))
 
 
 @dataclasses.dataclass
