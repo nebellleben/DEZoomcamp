@@ -11,7 +11,7 @@ def create_events_source_kafka(t_env):
             trip_distance DOUBLE,
             total_amount DOUBLE,
             lpep_pickup_datetime STRING,
-            event_timestamp AS TO_TIMESTAMP(lpep_pickup_datetime, 'yyyy-MM-dd HH:mm:ss'),
+            event_timestamp AS TO_TIMESTAMP(lpep_pickup_datetime, 'yyyy-MM-dd''T''HH:mm:ss'),
             WATERMARK for event_timestamp as event_timestamp - INTERVAL '5' SECOND
         ) WITH (
             'connector' = 'kafka',
@@ -27,7 +27,7 @@ def create_events_source_kafka(t_env):
 
 
 def create_events_aggregated_sink(t_env):
-    table_name = 'processed_events_aggregated'
+    table_name = "processed_events_aggregated"
     sink_ddl = f"""
         CREATE TABLE {table_name} (
             window_start TIMESTAMP(3),
@@ -49,10 +49,12 @@ def create_events_aggregated_sink(t_env):
 
 
 def log_aggregation():
+    # Set up the execution environment
     env = StreamExecutionEnvironment.get_execution_environment()
     env.enable_checkpointing(10 * 1000)
-    env.set_parallelism(3)
+    env.set_parallelism(1)
 
+    # Set up the table environment
     settings = EnvironmentSettings.new_instance().in_streaming_mode().build()
     t_env = StreamTableEnvironment.create(env, environment_settings=settings)
 
@@ -68,7 +70,7 @@ def log_aggregation():
             COUNT(*) AS num_trips,
             SUM(total_amount) AS total_revenue
         FROM TABLE(
-            TUMBLE(TABLE {source_table}, DESCRIPTOR(event_timestamp), INTERVAL '1' HOUR)
+            TUMBLE(TABLE {source_table}, DESCRIPTOR(event_timestamp), INTERVAL '5' MINUTE)
         )
         GROUP BY window_start, PULocationID;
 
@@ -78,5 +80,5 @@ def log_aggregation():
         print("Writing records from Kafka to JDBC failed:", str(e))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     log_aggregation()

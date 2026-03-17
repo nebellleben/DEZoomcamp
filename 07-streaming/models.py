@@ -2,6 +2,8 @@ import dataclasses
 import json
 from datetime import datetime
 
+import pandas as pd
+
 
 def ride_deserializer(message):
     return json.loads(message.decode("utf-8"))
@@ -20,12 +22,15 @@ class Ride:
 
 
 def ride_from_row(row):
+    passenger_count = row["passenger_count"]
+    if pd.isna(passenger_count):
+        passenger_count = 0
     return Ride(
         lpep_pickup_datetime=row["lpep_pickup_datetime"],
         lpep_dropoff_datetime=row["lpep_dropoff_datetime"],
         PULocationID=row["PULocationID"],
         DOLocationID=row["DOLocationID"],
-        passenger_count=row["passenger_count"],
+        passenger_count=passenger_count,
         trip_distance=row["trip_distance"],
         tip_amount=row["tip_amount"],
         total_amount=row["total_amount"],
